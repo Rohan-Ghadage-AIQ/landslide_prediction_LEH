@@ -1,0 +1,76 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Machine Learning Models & Heavy Artifacts
+*.pkl
+*.joblib
+*.h5
+*.pth
+*.onnx
+
+# Data files & Heavy GeoTIFF Rasters
+data/*.tif
+data/**/*.tif
+*.tif
+*.tiff
+training_data.csv
+mock_training_data.csv
+*.geotiff
+
+# Distribution / Packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs & Databases
+*.log
+*.sqlite
+*.sqlite3
+
+# Environment Variables & Credentials
+.env
+.env.*
+!.env.example
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
