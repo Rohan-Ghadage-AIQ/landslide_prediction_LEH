@@ -14,7 +14,7 @@ env.bak/
 venv.bak/
 
 # Machine Learning Models & Heavy Artifacts
-*.pkl
+
 *.joblib
 *.h5
 *.pth

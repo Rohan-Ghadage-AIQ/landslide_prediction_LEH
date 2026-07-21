@@ -4,6 +4,7 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from fastapi.responses import FileResponse
 
 import config
 from data_pipeline import generate_real_data_for_leh
@@ -19,6 +20,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+def serve_ui():
+    html_path = os.path.join(config.BASE_DIR, "index.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path)
+    return {"message": "Leh Landslide Early Warning Backend is running. index.html not found."}
 
 class PredictRequest(BaseModel):
     elevation: float
