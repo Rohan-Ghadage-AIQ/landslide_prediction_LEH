@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -15,10 +15,31 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
   <style>
+    /* LIGHT MODE THEME (DEFAULT) */
     :root {
+      --bg-dark: #f8fafc;
+      --header-bg: rgba(255, 255, 255, 0.9);
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --input-bg: #f1f5f9;
+      --primary-cyan: #0284c7;
+      --primary-blue: #2563eb;
+      --accent-green: #16a34a;
+      --accent-yellow: #d97706;
+      --accent-red: #dc2626;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* DARK MODE OVERRIDE */
+    [data-theme="dark"] {
       --bg-dark: #090d16;
-      --card-bg: rgba(18, 26, 43, 0.75);
+      --header-bg: rgba(11, 16, 28, 0.85);
+      --card-bg: rgba(18, 26, 43, 0.85);
       --card-border: rgba(255, 255, 255, 0.08);
+      --input-bg: #0f172a;
       --primary-cyan: #00f2fe;
       --primary-blue: #4facfe;
       --accent-green: #00e676;
@@ -26,6 +47,8 @@
       --accent-red: #ff3d00;
       --text-main: #f1f5f9;
       --text-muted: #94a3b8;
+      --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
     * {
@@ -38,12 +61,13 @@
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(79, 172, 254, 0.05) 0%, transparent 40%);
+        radial-gradient(circle at 10% 10%, rgba(2, 132, 199, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(37, 99, 235, 0.04) 0%, transparent 40%);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     h1, h2, h3, h4, .brand-title {
@@ -52,7 +76,7 @@
 
     /* Top Navigation Header */
     header {
-      background: rgba(11, 16, 28, 0.85);
+      background: var(--header-bg);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--card-border);
       padding: 1rem 2rem;
@@ -62,6 +86,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-shadow: var(--shadow-sm);
     }
 
     .brand-container {
@@ -78,18 +103,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      color: #090d16;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+      font-size: 20px;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
     }
 
     .brand-text h1 {
       font-size: 1.25rem;
       font-weight: 700;
+      color: var(--text-main);
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #ffffff, #cbd5e1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
     .brand-text p {
@@ -97,12 +120,39 @@
       color: var(--text-muted);
     }
 
+    /* Actions & Controls */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--card-border);
+    }
+
     .status-badge {
       display: flex;
       align-items: center;
       gap: 8px;
-      background: rgba(0, 230, 118, 0.1);
-      border: 1px solid rgba(0, 230, 118, 0.3);
+      background: rgba(22, 163, 74, 0.1);
+      border: 1px solid rgba(22, 163, 74, 0.3);
       padding: 6px 14px;
       border-radius: 20px;
       font-size: 0.8rem;
@@ -128,8 +178,8 @@
     /* Main Navigation Tabs */
     .nav-tabs {
       display: flex;
-      gap: 8px;
-      background: rgba(18, 26, 43, 0.5);
+      gap: 6px;
+      background: var(--input-bg);
       padding: 4px;
       border-radius: 12px;
       border: 1px solid var(--card-border);
@@ -151,14 +201,16 @@
     }
 
     .tab-btn.active, .tab-btn:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      background: var(--card-bg);
     }
 
     .tab-btn.active {
-      background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(79, 172, 254, 0.15));
-      border: 1px solid rgba(0, 242, 254, 0.3);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       color: var(--primary-cyan);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      font-weight: 600;
     }
 
     /* Container & Layout */
@@ -195,14 +247,13 @@
       .grid-2 { grid-template-columns: 1fr; }
     }
 
-    /* Glass Cards */
+    /* Cards */
     .card {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
       border: 1px solid var(--card-border);
       border-radius: 20px;
       padding: 1.75rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--shadow-md);
     }
 
     .card-header {
@@ -218,14 +269,14 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      color: #fff;
+      color: var(--text-main);
     }
 
     .card-title i {
       color: var(--primary-cyan);
     }
 
-    /* Preset Buttons */
+    /* Preset Chips */
     .presets-container {
       display: flex;
       gap: 8px;
@@ -234,20 +285,21 @@
     }
 
     .preset-chip {
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--input-bg);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
       padding: 6px 12px;
       border-radius: 20px;
       font-size: 0.75rem;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .preset-chip:hover {
-      background: rgba(0, 242, 254, 0.1);
+      background: rgba(2, 132, 199, 0.1);
       color: var(--primary-cyan);
-      border-color: rgba(0, 242, 254, 0.3);
+      border-color: rgba(2, 132, 199, 0.3);
     }
 
     /* Input Controls */
@@ -275,7 +327,7 @@
       font-size: 0.85rem;
       font-weight: 700;
       color: var(--primary-cyan);
-      background: rgba(0, 242, 254, 0.1);
+      background: rgba(2, 132, 199, 0.1);
       padding: 2px 8px;
       border-radius: 6px;
     }
@@ -284,7 +336,7 @@
       width: 100%;
       height: 6px;
       border-radius: 3px;
-      background: #1e293b;
+      background: var(--card-border);
       outline: none;
       -webkit-appearance: none;
     }
@@ -295,7 +347,7 @@
       height: 18px;
       border-radius: 50%;
       background: var(--primary-cyan);
-      box-shadow: 0 0 10px var(--primary-cyan);
+      box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
       cursor: pointer;
       transition: transform 0.1s;
     }
@@ -307,10 +359,10 @@
     .select-control {
       width: 100%;
       padding: 10px 14px;
-      background: #0f172a;
+      background: var(--input-bg);
       border: 1px solid var(--card-border);
       border-radius: 10px;
-      color: #fff;
+      color: var(--text-main);
       font-size: 0.85rem;
       outline: none;
     }
@@ -321,11 +373,11 @@
       border: none;
       border-radius: 12px;
       background: linear-gradient(135deg, var(--primary-cyan), var(--primary-blue));
-      color: #090d16;
+      color: #ffffff;
       font-weight: 700;
       font-size: 0.95rem;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
       transition: all 0.2s;
       display: flex;
       align-items: center;
@@ -336,10 +388,10 @@
 
     .btn-predict:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 25px rgba(0, 242, 254, 0.4);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
     }
 
-    /* Risk Results Meter Panel */
+    /* Risk Meter Output Panel */
     .results-panel {
       display: flex;
       flex-direction: column;
@@ -364,7 +416,7 @@
 
     .gauge-bg {
       fill: none;
-      stroke: rgba(255, 255, 255, 0.05);
+      stroke: var(--card-border);
       stroke-width: 14;
     }
 
@@ -383,7 +435,6 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-
     }
 
     .gauge-val {
@@ -391,6 +442,7 @@
       font-weight: 800;
       font-family: 'Outfit', sans-serif;
       line-height: 1;
+      color: var(--text-main);
     }
 
     .gauge-lbl {
@@ -412,28 +464,28 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 1.5rem;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
     .risk-badge.low {
-      background: rgba(0, 230, 118, 0.15);
+      background: rgba(22, 163, 74, 0.12);
       border: 1px solid var(--accent-green);
       color: var(--accent-green);
     }
 
     .risk-badge.moderate {
-      background: rgba(255, 193, 7, 0.15);
+      background: rgba(217, 119, 6, 0.12);
       border: 1px solid var(--accent-yellow);
       color: var(--accent-yellow);
     }
 
     .risk-badge.high {
-      background: rgba(255, 61, 0, 0.15);
+      background: rgba(220, 38, 38, 0.12);
       border: 1px solid var(--accent-red);
       color: var(--accent-red);
     }
 
-    /* Factors Breakdown List */
+    /* Factors List */
     .factors-list {
       width: 100%;
       display: flex;
@@ -443,7 +495,7 @@
     }
 
     .factor-item {
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--input-bg);
       border: 1px solid var(--card-border);
       padding: 10px 14px;
       border-radius: 10px;
@@ -451,10 +503,7 @@
       align-items: center;
       justify-content: space-between;
       font-size: 0.85rem;
-    }
-
-    .factor-item i {
-      width: 20px;
+      color: var(--text-main);
     }
 
     /* Leaflet Map */
@@ -478,7 +527,7 @@
     }
 
     th {
-      background: rgba(15, 23, 42, 0.8);
+      background: var(--input-bg);
       color: var(--text-muted);
       padding: 12px 16px;
       font-weight: 600;
@@ -487,20 +536,21 @@
 
     td {
       padding: 12px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-main);
     }
 
     tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(2, 132, 199, 0.03);
     }
 
     .badge-type {
-      background: rgba(0, 242, 254, 0.1);
+      background: rgba(2, 132, 199, 0.1);
       color: var(--primary-cyan);
       padding: 4px 8px;
       border-radius: 6px;
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     /* Footer */
@@ -510,7 +560,7 @@
       text-align: center;
       font-size: 0.8rem;
       color: var(--text-muted);
-      background: rgba(9, 13, 22, 0.9);
+      background: var(--header-bg);
     }
   </style>
 </head>
@@ -520,7 +570,7 @@
   <header>
     <div class="brand-container">
       <div class="brand-icon">
-        <i class="fa-solid me-2 fa-mountain-sun"></i>
+        <i class="fa-solid fa-mountain-sun"></i>
       </div>
       <div class="brand-text">
         <h1>Leh-Ladakh Landslide EWS</h1>
@@ -544,14 +594,22 @@
       </button>
     </div>
 
-    <!-- Live Status -->
-    <div class="status-badge" id="apiStatusBadge">
-      <div class="status-dot"></div>
-      <span id="apiStatusText">CONNECTING...</span>
+    <!-- Actions & Status -->
+    <div class="header-actions">
+      <!-- Theme Switcher -->
+      <button class="theme-toggle-btn" id="themeBtn" onclick="toggleTheme()">
+        <i class="fa-solid fa-moon" id="themeIcon"></i> <span id="themeText">Dark Mode</span>
+      </button>
+
+      <!-- Live API Status -->
+      <div class="status-badge" id="apiStatusBadge">
+        <div class="status-dot"></div>
+        <span id="apiStatusText">CONNECTING...</span>
+      </div>
     </div>
   </header>
 
-  <!-- Content Container -->
+  <!-- Main Container -->
   <div class="container">
 
     <!-- TAB 1: RISK CALCULATOR -->
@@ -692,7 +750,7 @@
           <div class="card-title">
             <i class="fa-solid fa-map-location-dot"></i> Leh-Ladakh GSI Historical Landslide Inventory Map
           </div>
-          <span style="font-size: 0.8rem; color: var(--text-muted);">15 Verified Incident Locations Overlay</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">15 Mapped Historical Incident Locations</span>
         </div>
         <div id="map"></div>
       </div>
@@ -748,9 +806,9 @@
             <div class="card-title"><i class="fa-solid fa-rotate"></i> Model Pipeline Controller</div>
           </div>
           <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem;">
-            Trigger on-demand data regeneration and model retraining using the backend pipeline API:
+            Trigger on-demand feature extraction & model retraining using the backend pipeline API:
           </p>
-          <button class="btn-predict" onclick="triggerRetrain()" style="background: linear-gradient(135deg, #00e676, #00b0ff);">
+          <button class="btn-predict" onclick="triggerRetrain()" style="background: linear-gradient(135deg, #16a34a, #0284c7);">
             <i class="fa-solid fa-arrows-rotate"></i> Trigger Retraining Pipeline (`/api/train`)
           </button>
           <div id="retrainStatus" style="margin-top: 1rem; font-size: 0.85rem; color: var(--primary-cyan); text-align: center;"></div>
@@ -791,6 +849,25 @@
       {"location": "Saspul Valley Slope Slide Zone", "latitude": 34.2410, "longitude": 77.1640, "type": "Debris Slide", "source": "GSI NLSM"},
       {"location": "Khaltse Indus River Gorge Rockfall", "latitude": 34.3210, "longitude": 76.8450, "type": "Rockfall", "source": "GSI NLSM"}
     ];
+
+    // Theme Toggle Function
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute("data-theme");
+      const newTheme = currentTheme === "light" ? "dark" : "light";
+      html.setAttribute("data-theme", newTheme);
+
+      const icon = document.getElementById("themeIcon");
+      const text = document.getElementById("themeText");
+
+      if (newTheme === "dark") {
+        icon.className = "fa-solid fa-sun";
+        text.innerText = "Light Mode";
+      } else {
+        icon.className = "fa-solid fa-moon";
+        text.innerText = "Dark Mode";
+      }
+    }
 
     // Check Backend Status
     async function checkApiStatus() {
@@ -920,7 +997,7 @@
       mapInitialized = true;
       map = L.map('map').setView([34.1526, 77.5771], 9);
 
-      // OpenStreetMap / ESRI World Imagery Layer
+      // OpenStreetMap Layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
@@ -929,16 +1006,16 @@
       gsiPoints.forEach(pt => {
         const marker = L.circleMarker([pt.latitude, pt.longitude], {
           radius: 8,
-          fillColor: "#ff3d00",
+          fillColor: "#dc2626",
           color: "#fff",
           weight: 2,
           opacity: 1,
-          fillOpacity: 0.8
+          fillOpacity: 0.85
         }).addTo(map);
 
         marker.bindPopup(`
           <div style="font-family: 'Inter', sans-serif;">
-            <strong style="color: #090d16; font-size: 14px;">${pt.location}</strong><br/>
+            <strong style="color: #0f172a; font-size: 14px;">${pt.location}</strong><br/>
             <span style="font-size: 12px; color: #475569;">Type: <b>${pt.type}</b></span><br/>
             <span style="font-size: 11px; color: #64748b;">Coords: ${pt.latitude}, ${pt.longitude}</span><br/>
             <span style="font-size: 10px; color: #0284c7;">Source: ${pt.source}</span>
